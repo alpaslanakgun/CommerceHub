@@ -25,44 +25,28 @@ namespace CommerceHub.Persistence.Repositories
 		//async bir metodun icinde senkrron bekleme yapabilecegimizi belirtir
 		// metodun içerisinde await kullanmasına izin veren ve metodun asenkron calısma akısına dahil oldugunu ifade eden kelimeld.r 
 
-		public Task AddAsync(T item)
-		{
-			throw new NotImplementedException();
-		}
+		public async Task AddAsync(T item)=> await _dbSet.AddAsync(item);
+		
 
-		public Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate)
-		{
-			throw new NotImplementedException();
-		}
+		public async Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate)=>await _dbSet.Where(predicate).ToListAsync();
 
-		public Task<List<T?>> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
-		{
-			throw new NotImplementedException();
-		}
 
-		public Task<List<T>> GetAllAsync()
-		{
-			throw new NotImplementedException();
-		}
+		public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate) => await _dbSet.FirstOrDefaultAsync(predicate);
+	
 
-		public Task<T?> GetByIdAsync(int id)
-		{
-			throw new NotImplementedException();
-		}
+		public async Task<List<T>> GetAllAsync() => await _dbSet.ToListAsync();
+		
 
-		public IQueryable<T> Query()
-		{
-			throw new NotImplementedException();
-		}
+		public async Task<T?> GetByIdAsync(int id)=>await _dbSet.FindAsync(id);
+	
 
-		public void Remove(T item)
-		{
-			throw new NotImplementedException();
-		}
+		public IQueryable<T> Query() =>_dbSet.AsQueryable();// db de complex sorgular icin kullanılacaktır. 
+		
 
-		public void Update(T item)
-		{
-			throw new NotImplementedException();
-		}
+		public void Remove(T item)=> _dbSet.Remove(item);
+
+
+		public void Update(T item)=> _dbSet.Update(item);
+		
 	}
 }

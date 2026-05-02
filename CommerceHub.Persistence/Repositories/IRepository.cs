@@ -12,7 +12,7 @@ namespace CommerceHub.Persistence.Repositories
 		Task<T?> GetByIdAsync(int id);
 		Task<List<T>> GetAllAsync();
 		Task<List<T>>FindAsync(Expression<Func<T, bool>> predicate);
-		Task<List<T?>> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
+		Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
 		Task AddAsync(T item);çç
 		void Remove(T item);
 		void Update(T item);
