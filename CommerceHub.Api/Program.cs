@@ -3,6 +3,13 @@
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using CommerceHub.Infrastructure.Options;
+using CommerceHub.Persistence.Extentsions;
+using CommerceHub.Infrastructure.Extensions;
+using CommerceHub.Infrastructure.Services;
+using CommerceHub.Application.Interfaces;
+using CommerceHub.Persistence.Services;
+using CommerceHub.Persistence.Seed;
 
 namespace CommerceHub.Api
 {
@@ -43,6 +50,38 @@ namespace CommerceHub.Api
                     }
                 });
             });
+
+            builder.Services.AddPersistenceService(builder.Configuration);
+            builder.Services.AddInfrastructureServices(builder.Configuration);
+
+            builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
+            builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddScoped<DataSeeder>();
+
+
+            var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>(); // bu kýsým gdip appsettings.json okuyacaktýr ve ayarlarý oradan almamýzý saglayacaktýr. 
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true, // Token kim tarafýndan oluþturulmuþ, yani güvenilir bir kaynak mý?
+                    ValidateAudience = true, //Token hangi uygulama veya hizmet için oluþturulmuþ, yani doðru hedefe mi yönlendirilmiþ?
+                    ValidateLifetime = true, //Token'ýn süresi dolmuþ mu, yani hala geçerli mi?
+                    ValidateIssuerSigningKey = true, //Token'ýn imzalanmasý için kullanýlan anahtarýn geçerli ve güvenilir olup olmadýðýný kontrol eder.
+                    ValidIssuer = jwtOptions.Issuer, //beklenen deðeri belirtiyoruz. Bu deðerin token içinde bulunan issuer ile eþleþmesi gerekir.
+                    ValidAudience = jwtOptions.Audience, // bekelenen deðeri belirtiyoruz. Bu deðerin token içinde bulunan audience ile eþleþmesi gerekir.
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtOptions.Secret)), // imza dogrulama
+
+                };
+            });
+          
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
 
