@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommerceHub.Infrastructure\CommerceHub.Infrastructure.csproj" />
+    <ProjectReference Include="..\CommerceHub.Persistence\CommerceHub.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

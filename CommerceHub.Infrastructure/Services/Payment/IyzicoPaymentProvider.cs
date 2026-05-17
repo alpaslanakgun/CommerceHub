@@ -15,11 +15,11 @@ namespace CommerceHub.Infrastructure.Services.Payment
 	public class IyzicoPaymentProvider : IPaymentProvider
 	{
 
-		private readonly Options.IyzicoOptions _iyzicoOptions;
+		private readonly Iyzipay.Options _iyzicoOptions;
 
 		public IyzicoPaymentProvider(IyzicoOptions iyzicoOptions)
 		{
-			_iyzicoOptions = new Options.IyzicoOptions
+			_iyzicoOptions = new Iyzipay.Options
 			{
 				ApiKey = iyzicoOptions.ApiKey,
 				SecretKey = iyzicoOptions.SecretKey,

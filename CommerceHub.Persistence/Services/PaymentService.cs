@@ -19,7 +19,7 @@ namespace CommerceHub.Persistence.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailService _emailService;
         private readonly IPaymentProviderFactory _paymentProviderFactory;
-
+        
         public PaymentService(IUnitOfWork unitOfWork, IEmailService emailService, IPaymentProviderFactory paymentProviderFactory)
         {
             _unitOfWork = unitOfWork;
@@ -37,8 +37,13 @@ namespace CommerceHub.Persistence.Services
 
             if (order.OrderStatus != OrderStatus.Pending)
                 throw new AppException("Sipariş zaten işlenmiş veya iptal edilmiş.");
-            var provider = _paymentProviderFactory.Create("fake");
 
+            if(order.Payment != null)
+				throw new AppException("Bu sipariş için zaten ödeme yapılmıstır..");
+
+
+			var provider = _paymentProviderFactory.Create("fake");
+            
             var providerResult = await provider.ChargeAsync(new PaymentProviderRequest(
                 dto.CardNumber,
                 dto.CardHolderNumner,
