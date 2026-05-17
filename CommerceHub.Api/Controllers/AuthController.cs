@@ -7,11 +7,11 @@ namespace CommerceHub.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AutController : BaseApiController
+    public class AuthController : BaseApiController
     {
         private readonly IAuthService _authService;
 
-        public AutController(IAuthService authService)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
         }

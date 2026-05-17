@@ -1,4 +1,7 @@
-﻿using CommerceHub.Application.Interfaces;
+﻿using CommerceHub.Application.DTOs.Category;
+using CommerceHub.Application.DTOs.Product;
+using CommerceHub.Application.Interfaces;
+using CommerceHub.Domain.Entities;
 using CommerceHub.Persistence.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +10,7 @@ namespace CommerceHub.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class CategoriesController : BaseApiController
     {
         private readonly ICategoryService _categoryService;
 
@@ -30,7 +33,27 @@ namespace CommerceHub.Api.Controllers
             var product = await _categoryService.GetByIdAsync(id);
             return Ok(product);
         }
+		[HttpPost]
+		public async Task<IActionResult> Create([FromBody] CategoryCreateDto categoryCreateDto)
+		{
+			var category = await _categoryService.CreateAsync(categoryCreateDto);
+			return Created(category);
+		}
+
+		[HttpPut("{id}")]
+		public async Task<IActionResult> Update(int id, CategoryUpdateDto  categoryUpdateDto)
+		{
+			var category = await _categoryService.UpdateAsync(id, categoryUpdateDto);
+			return Ok(category, "Kategori Guncellendi");
+		}
 
 
-    }
+		[HttpDelete]
+		public async Task<IActionResult> Delete(int id)
+		{
+			await _categoryService.DeleteAsync(id);
+			return Ok<object>(null, "Kategori Silindi");
+		}
+
+	}
 }
