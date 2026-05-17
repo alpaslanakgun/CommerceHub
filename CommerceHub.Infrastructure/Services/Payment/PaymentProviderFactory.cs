@@ -5,22 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 
 using CommerceHub.Application.Interfaces.Payment;
+using CommerceHub.Infrastructure.Options;
 
 namespace CommerceHub.Infrastructure.Services.Payment
 {
-	public class PaymentProviderFactory : IPaymentProviderFactory
+	public static class PaymentProviderFactory 
 	{
 
-		public IPaymentProvider Create(string providerName="fake")
+		public static IPaymentProvider Create(string providerName="fake",IyzicoOptions? iyzicoOptions=null)
 		{
 			return providerName.ToLower() switch
 			{
 				"fake" => new FakePaymentProvider(),
+				"iyzico"=> new IyzicoPaymentProvider(iyzicoOptions!),
 				_ => throw new InvalidOperationException($"Bilinmeyen ödeme sağlayıcısı :{providerName} ")
 			};
-
-
 		}
 
+		
 	}
 }
